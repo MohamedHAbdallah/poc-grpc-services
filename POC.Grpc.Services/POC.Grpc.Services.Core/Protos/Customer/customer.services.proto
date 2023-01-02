@@ -1,0 +1,11 @@
+syntax="proto3";
+
+option csharp_namespace="POC.Grpc.Services.Core.Protos";
+
+package Protos.Customer;
+
+import "Protos/Customer/customer.messages.proto";
+
+service CustomerServiceDef{
+    rpc GetCustomerById(GetCustomerByIdReqMsgDef) returns(GetCustomerByIdResMsgDef);
+}

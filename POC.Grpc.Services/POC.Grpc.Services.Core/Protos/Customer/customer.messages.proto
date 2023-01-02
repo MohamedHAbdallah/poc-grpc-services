@@ -1,0 +1,32 @@
+syntax="proto3";
+
+package  Protos.Customer;
+
+import "google/protobuf/timestamp.proto";
+import "Protos/Common/common.messages.proto";
+
+message CustomerMsgDef
+{
+    int32 customer_id = 1;
+    string customer_name = 2;
+    oneof birth_dateDef{
+        google.protobuf.Timestamp birth_date=3;
+        int32 age = 4;
+    }
+    enum MaritalStatusDef  {
+        SINGLE=0;
+        MARRIED=1;
+        DIVORCED=2;
+        OTHER=3;
+    }
+    MaritalStatusDef marital_status=5;
+}
+
+message GetCustomerByIdReqMsgDef {
+    int32 customer_id = 1;
+}
+
+message GetCustomerByIdResMsgDef{
+    CustomerMsgDef customer = 1;
+    Protos.Common.ResponseMsgDef res = 2;
+}

@@ -1,0 +1,11 @@
+syntax="proto3";
+
+option csharp_namespace="POC.Grpc.Services.Core.Protos";
+
+package Protos.Order;
+
+import "Protos/Order/order.messages.proto";
+
+service OrderServiceDef{
+    rpc GetOrdersByCustomerId(GetOrdersByCustomerIdReqMsgDef) returns(GetOrdersByCustomerIdResMsgDef);
+}

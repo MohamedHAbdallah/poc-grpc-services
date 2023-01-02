@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Protos\Common\common.messages.proto" />
+    <None Remove="Protos\Order\g250szky.iuv~" />
+    <None Remove="Protos\Order\order.messages.proto" />
+    <None Remove="Protos\Order\order.services.proto" />
+    <None Remove="Protos\Customer\customer.messages.proto" />
+    <None Remove="Protos\Customer\customer.services.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.21.12" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.51.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+	<Protobuf Include="Protos\Common\common.messages.proto" GrpcServices="None">
+	</Protobuf>
+    <Protobuf Include="Protos\Order\order.messages.proto" GrpcServices="None">
+	</Protobuf>
+    <Protobuf Include="Protos\Order\order.services.proto" GrpcServices="Both">
+    </Protobuf>
+    <Protobuf Include="Protos\Customer\customer.messages.proto" GrpcServices="None">
+    </Protobuf>
+    <Protobuf Include="Protos\Customer\customer.services.proto" GrpcServices="Both">
+    </Protobuf>
+  </ItemGroup>
+
+</Project>

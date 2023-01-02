@@ -1,0 +1,9 @@
+syntax="proto3";
+
+package  Protos.Common;
+
+message ResponseMsgDef
+{
+    int32 status = 1;
+    string message = 2;
+}
