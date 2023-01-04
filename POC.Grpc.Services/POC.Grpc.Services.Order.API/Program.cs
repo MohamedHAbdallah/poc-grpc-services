@@ -1,14 +1,26 @@
+using Microsoft.AspNetCore.Authentication;
+using POC.Grpc.Services.Core;
 using POC.Grpc.Services.Order.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options =>
+{
+    //options.Interceptors.Add<AuthorizationHeaderInterceptor>();
+});
+builder.Services.AddSingleton<AuthorizationHeaderInterceptor>();
 builder.Services.AddGrpcReflection();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//builder.Services.AddAuthentication("BasicAuth")
+//    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuth", opt =>
+//    {
+
+//    });
 
 var app = builder.Build();
 

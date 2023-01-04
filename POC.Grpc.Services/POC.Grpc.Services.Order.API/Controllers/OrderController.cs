@@ -1,7 +1,9 @@
-using Grpc.Net.Client;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
+using POC.Grpc.Services.Core;
 using POC.Grpc.Services.Core.Protos;
 using Protos.Customer;
+using System.Text;
 
 namespace POC.Grpc.Services.Order.API.Controllers
 {
@@ -21,13 +23,18 @@ namespace POC.Grpc.Services.Order.API.Controllers
         [Route("GetOrderByCustomerId")]
         public IActionResult GetOrderByCustomerId(int customerId)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:7077");
-
-            var client = new CustomerServiceDef.CustomerServiceDefClient(channel);
-
-            var req = new GetCustomerByIdReqMsgDef { CustomerId = customerId };
-            var res = client.GetCustomerById(req);
-            return Ok(res);
+            try
+            {
+                var req = new GetCustomerByIdReqMsgDef { CustomerId = customerId };
+                var res = GrpcClient.CustomerClient.GetCustomerByIdAsync(req);
+                
+                return Ok(res);
+            }
+            catch (RpcException ex)
+            {
+                _logger.LogError(ex.Message);
+                return Ok();
+            }
         }
     }
 }

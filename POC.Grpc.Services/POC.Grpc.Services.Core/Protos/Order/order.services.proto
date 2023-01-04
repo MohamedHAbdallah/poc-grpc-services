@@ -8,4 +8,5 @@ import "Protos/Order/order.messages.proto";
 
 service OrderServiceDef{
     rpc GetOrdersByCustomerId(GetOrdersByCustomerIdReqMsgDef) returns(GetOrdersByCustomerIdResMsgDef);
+    rpc GetOrdersSizeByCustomerId(GetOrdersByCustomerIdReqMsgDef) returns(GetOrdersSizeByCustomerIdResMsgDef);
 }

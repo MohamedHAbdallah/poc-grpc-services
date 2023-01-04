@@ -1,13 +1,18 @@
 syntax="proto3";
 
 package  Protos.Order;
+import "google/protobuf/timestamp.proto";
 import "Protos/Common/common.messages.proto";
 
 message OrderMsgDef {
     int32 order_id = 1;
     int32 customer_id = 2;
-    AddressMsgDef delivery_address = 3;
-    repeated ItemMsgDef items = 4;
+    double total_price = 3;
+    bool is_deleived = 4;
+    string comment = 5;
+    google.protobuf.Timestamp delivered_date = 6;
+    AddressMsgDef delivery_address = 7;
+    repeated ItemMsgDef items = 8;
 }
 
 message OrdersMsgDef{
@@ -24,6 +29,8 @@ message AddressMsgDef {
 message ItemMsgDef {
   int32 item_id=1;
   string item_name=2;
+  string item_description=3;
+  double item_price=4;
 }
 
 message GetOrdersByCustomerIdReqMsgDef {
@@ -32,5 +39,10 @@ message GetOrdersByCustomerIdReqMsgDef {
 
 message GetOrdersByCustomerIdResMsgDef{
     OrdersMsgDef orders = 1;
+    Protos.Common.ResponseMsgDef res = 2;
+}
+
+message GetOrdersSizeByCustomerIdResMsgDef{
+    int32 size_bytes = 1;
     Protos.Common.ResponseMsgDef res = 2;
 }

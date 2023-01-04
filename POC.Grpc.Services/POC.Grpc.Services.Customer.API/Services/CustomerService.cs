@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using POC.Grpc.Services.Core.Protos;
 using Protos.Customer;
 
@@ -12,6 +13,7 @@ public class CustomerService : CustomerServiceDef.CustomerServiceDefBase
         _logger = logger;
     }
 
+    //[Authorize(AuthenticationSchemes ="BasicAuth",Roles ="Device")]
     public override async Task<GetCustomerByIdResMsgDef> GetCustomerById(GetCustomerByIdReqMsgDef request, ServerCallContext context)
     {
         var res = new GetCustomerByIdResMsgDef {Res = new Protos.Common.ResponseMsgDef {Status = 0 , Message = "تم بنجاح" }, Customer = new CustomerMsgDef { CustomerId = 1, CustomerName = "Mohamed Abdallah" }  };
