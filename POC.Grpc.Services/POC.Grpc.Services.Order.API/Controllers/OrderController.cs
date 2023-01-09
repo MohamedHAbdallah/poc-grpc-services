@@ -2,6 +2,7 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using POC.Grpc.Services.Core;
 using POC.Grpc.Services.Core.Protos;
+using POC.Grpc.Services.Order.Business;
 using Protos.Customer;
 using System.Text;
 
@@ -12,29 +13,21 @@ namespace POC.Grpc.Services.Order.API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ILogger<OrderController> _logger;
+        private readonly IOrderService _orderService;
 
-        public OrderController(ILogger<OrderController> logger)
+        public OrderController(ILogger<OrderController> logger, IOrderService orderService)
         {
             _logger = logger;
+            _orderService = orderService;
         }
 
 
         [HttpGet]
         [Route("GetOrderByCustomerId")]
-        public IActionResult GetOrderByCustomerId(int customerId)
+        public async Task<IActionResult> GetOrderByCustomerId(int customerId)
         {
-            try
-            {
-                var req = new GetCustomerByIdReqMsgDef { CustomerId = customerId };
-                var res = GrpcClient.CustomerClient.GetCustomerByIdAsync(req);
-                
-                return Ok(res);
-            }
-            catch (RpcException ex)
-            {
-                _logger.LogError(ex.Message);
-                return Ok();
-            }
+            var res = await _orderService.GetOrderByCustomerId(customerId);
+            return Ok(res);
         }
     }
 }

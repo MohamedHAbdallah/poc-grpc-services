@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\POC.Grpc.Services.Core\POC.Grpc.Services.Core.csproj" />
+    <ProjectReference Include="..\POC.Grpc.Services.Order.Business\POC.Grpc.Services.Order.Business.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Grpc.Core;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
@@ -15,33 +16,39 @@ namespace POC.Grpc.Services.Core
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (Request.Headers.ContainsKey("Authorization"))
+            try
             {
-                var headerValue = Request.Headers["Authorization"].ToString();
-                if (headerValue.StartsWith("Basic"))
+                if (Request.Headers.ContainsKey("Authorization"))
                 {
-                    //username:password
-                    var token = headerValue.Split(" ")[1];
-
-                    var bytes = Convert.FromBase64String(token);
-                    var plainText = Encoding.UTF8.GetString(bytes);
-
-                    int seperator = plainText.IndexOf(':');
-                    var username = plainText.Substring(0, seperator);
-                    var password = plainText.Substring(seperator+1);
-
-                    if(username == "device" && password == "P@ssw0rd")
+                    var headerValue = Request.Headers["Authorization"].ToString();
+                    if (headerValue.StartsWith("Basic"))
                     {
-                        var claimPrincipal = new ClaimsPrincipal(
-                                new ClaimsIdentity(new List<Claim>
-                                {
+                        //username:password
+                        var token = headerValue.Split(" ")[1];
+
+                        var bytes = Convert.FromBase64String(token);
+                        var plainText = Encoding.UTF8.GetString(bytes);
+
+                        int seperator = plainText.IndexOf(':');
+                        var username = plainText.Substring(0, seperator);
+                        var password = plainText.Substring(seperator + 1);
+
+                        if (username == "device" && password == "P@ssw0rd")
+                        {
+                            var claimPrincipal = new ClaimsPrincipal(
+                                    new ClaimsIdentity(new List<Claim>
+                                    {
                                     new Claim(ClaimTypes.Name, username),
                                     new Claim(ClaimTypes.Role, "Device")
-                                }
-                            ));
-                        return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimPrincipal,Scheme.Name)));
+                                    }
+                                ));
+                            return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimPrincipal, Scheme.Name)));
+                        }
                     }
+
                 }
+            }catch(Exception ex)
+            {
 
             }
             return Task.FromResult(AuthenticateResult.Fail("UnAuthorized"));

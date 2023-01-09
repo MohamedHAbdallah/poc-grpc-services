@@ -20,8 +20,10 @@ namespace POC.Grpc.Services.Core
                 if (_orderClient == null)
                 {
                     var channel = GrpcChannel.ForAddress("https://localhost:7104");
+
                     //var invoker = channel.Intercept(new AuthorizationHeaderInterceptor());
                     //_orderClient = new OrderServiceDef.OrderServiceDefClient(invoker);
+
                     _orderClient = new OrderServiceDef.OrderServiceDefClient(channel);
                 }
                 return _orderClient;
@@ -35,8 +37,11 @@ namespace POC.Grpc.Services.Core
                 if (_customerClient == null)
                 {
                     var channel = GrpcChannel.ForAddress("https://localhost:7077");
-                    var invoker = channel.Intercept(new AuthorizationHeaderInterceptor());
-                    _customerClient = new CustomerServiceDef.CustomerServiceDefClient(invoker);
+
+                    //var invoker = channel.Intercept(new AuthorizationHeaderInterceptor());
+                    //_customerClient = new CustomerServiceDef.CustomerServiceDefClient(invoker);
+
+                    _customerClient = new CustomerServiceDef.CustomerServiceDefClient(channel);
                 }
                 return _customerClient;
             }

@@ -48,7 +48,7 @@ public class OrderService : OrderServiceDef.OrderServiceDefBase
         }
         return orders;
     }
-    //[Authorize(AuthenticationSchemes = "BasicAuth", Roles = "Device")]
+    [Authorize(AuthenticationSchemes = "BasicAuth", Roles = "Device")]
     public override async Task<GetOrdersByCustomerIdResMsgDef> GetOrdersByCustomerId(GetOrdersByCustomerIdReqMsgDef request, ServerCallContext context)
     {
         var res = new GetOrdersByCustomerIdResMsgDef();

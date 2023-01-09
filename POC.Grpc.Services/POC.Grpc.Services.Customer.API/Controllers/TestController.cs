@@ -1,6 +1,5 @@
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
-using POC.Grpc.Services.Core;
 using POC.Grpc.Services.Core.DTO;
 using POC.Grpc.Services.Core.Protos;
 using Protos.Order;
@@ -14,9 +13,11 @@ namespace POC.Grpc.Services.Customer.API.Controllers
     public class TestController : ControllerBase
     {
         private readonly ILogger<TestController> _logger;
-        public TestController(ILogger<TestController> logger)
+        private readonly OrderServiceDef.OrderServiceDefClient _client;
+        public TestController(ILogger<TestController> logger, OrderServiceDef.OrderServiceDefClient client)
         {
             _logger = logger;
+            _client = client;
         }
 
 
@@ -47,29 +48,36 @@ namespace POC.Grpc.Services.Customer.API.Controllers
         [Route("SelectBetweenGrpcAndRest")]
         public async Task<IActionResult> SelectBetweenGrpcAndRest(int customerId)
         {
-            long grpcTimeInMs, restTimeInMs ;
-            long grpcSizeInBytes, restSizeInBytes ;
-            Stopwatch? watch;
-            GetOrdersSizeByCustomerIdResMsgDef resGrpc;
-            long? resRest;
+            try
+            {
+                long grpcTimeInMs, restTimeInMs;
+                long grpcSizeInBytes, restSizeInBytes;
+                Stopwatch? watch;
+                GetOrdersSizeByCustomerIdResMsgDef resGrpc;
+                long? resRest;
 
-            var reqGrpc = new GetOrdersByCustomerIdReqMsgDef { CustomerId = customerId };
-            
-            watch = Stopwatch.StartNew();
-            resGrpc = GrpcClient.OrderClient.GetOrdersSizeByCustomerId(reqGrpc);
-            watch.Stop();
-            grpcTimeInMs = watch.ElapsedMilliseconds;
-            grpcSizeInBytes = resGrpc.SizeBytes;
+                var reqGrpc = new GetOrdersByCustomerIdReqMsgDef { CustomerId = customerId };
+                watch = Stopwatch.StartNew();
+                resGrpc = _client.GetOrdersSizeByCustomerId(reqGrpc);
+                watch.Stop();
+                grpcTimeInMs = watch.ElapsedMilliseconds;
+                grpcSizeInBytes = resGrpc.SizeBytes;
 
-            watch = Stopwatch.StartNew();
-            resRest = await GetOrdersSizeByCustomerId(customerId);
-            watch.Stop();
-            restTimeInMs = watch.ElapsedMilliseconds;
-            restSizeInBytes = resRest ?? 0;
+                watch = Stopwatch.StartNew();
+                resRest = await GetOrdersSizeByCustomerId(customerId);
+                watch.Stop();
+                restTimeInMs = watch.ElapsedMilliseconds;
+                restSizeInBytes = resRest ?? 0;
 
 
-            var res = new { grpcBytesSize = grpcSizeInBytes, grpcTimeMs = grpcTimeInMs, restBytesSize = restSizeInBytes, restTimeMs = restTimeInMs };
-            return Ok(res);
+                var res = new { grpcBytesSize = grpcSizeInBytes, grpcTimeMs = grpcTimeInMs, restBytesSize = restSizeInBytes, restTimeMs = restTimeInMs };
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Ok();
+            }
         }
     }
 }
