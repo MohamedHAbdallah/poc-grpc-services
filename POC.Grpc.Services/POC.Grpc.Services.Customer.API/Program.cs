@@ -1,6 +1,4 @@
-using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Authentication;
-using Newtonsoft.Json.Linq;
 using POC.Grpc.Services.Core;
 using POC.Grpc.Services.Core.Protos;
 using POC.Grpc.Services.Customer.API.Services;
