@@ -26,19 +26,21 @@ builder.Services.AddAuthentication("BasicAuth")
     {
     });
 
+builder.Services.AddScoped<ITokenProvider, AppTokenProvider>();
+
 //.AddInterceptor<AuthorizationHeaderInterceptor>(InterceptorScope.Client)
 builder.Services.AddGrpcClient<OrderServiceDef.OrderServiceDefClient>(o =>
 {
     o.Address = new Uri("https://localhost:7104");
-}).AddCallCredentials((context, metadata) =>
+}).AddCallCredentials(async (context, metadata, serviceProvider) =>
 {
-        metadata.Add("Authorization", $"Basic ZGV2aWNlOlBAc3N3MHJk");
-    //if (!string.IsNullOrEmpty(_token))
-    //{
-        //metadata.Add("Authorization", $"Bearer {_token}");
-    //}
-    return Task.CompletedTask;
-}); 
+    var provider = serviceProvider.GetRequiredService<ITokenProvider>();
+    var token = await provider.GetTokenAsync();
+    if (!string.IsNullOrEmpty(token))
+    {
+        metadata.Add("Authorization", $"Basic {token}");
+    }
+});
 
 var app = builder.Build();
 

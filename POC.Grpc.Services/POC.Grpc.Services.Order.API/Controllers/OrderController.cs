@@ -1,9 +1,5 @@
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
-using POC.Grpc.Services.Core;
-using POC.Grpc.Services.Core.Protos;
 using POC.Grpc.Services.Order.Business;
-using Protos.Customer;
 using System.Text;
 
 namespace POC.Grpc.Services.Order.API.Controllers

@@ -1,8 +1,6 @@
-using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Authentication;
 using POC.Grpc.Services.Core;
 using POC.Grpc.Services.Core.Protos;
-using POC.Grpc.Services.Order.API.Services;
 using POC.Grpc.Services.Order.Business;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,20 +28,22 @@ builder.Services.AddAuthentication("BasicAuth")
 
 builder.Services.AddTransient<IOrderService, POC.Grpc.Services.Order.Business.OrderService>();
 
+builder.Services.AddScoped<ITokenProvider, AppTokenProvider>();
+
 //.AddInterceptor<AuthorizationHeaderInterceptor>(InterceptorScope.Client)
 builder.Services.AddGrpcClient<CustomerServiceDef.CustomerServiceDefClient>(o =>
 {
     o.Address = new Uri("https://localhost:7077");
 })
-  .AddCallCredentials((context, metadata) =>
-  {
-        metadata.Add("Authorization", $"Basic ZGV2aWNlOlBAc3N3MHJk");
-        //if (!string.IsNullOrEmpty(_token))
-        //{
-        //metadata.Add("Authorization", $"Bearer {_token}");
-        //}
-        return Task.CompletedTask;
-  });
+.AddCallCredentials(async (context, metadata, serviceProvider) =>
+{
+    var provider = serviceProvider.GetRequiredService<ITokenProvider>();
+    var token = await provider.GetTokenAsync();
+    if (!string.IsNullOrEmpty(token))
+    {
+        metadata.Add("Authorization", $"Basic {token}");
+    }
+});
 
 var app = builder.Build();
 

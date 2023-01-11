@@ -1,14 +1,9 @@
-﻿using Grpc.Core.Interceptors;
-using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 using POC.Grpc.Services.Core.Protos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace POC.Grpc.Services.Core
 {
+    [Obsolete]
     public static class GrpcClient
     {
         private static OrderServiceDef.OrderServiceDefClient? _orderClient = null;

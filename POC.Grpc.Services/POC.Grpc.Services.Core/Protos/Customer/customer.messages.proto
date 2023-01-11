@@ -29,4 +29,5 @@ message GetCustomerByIdReqMsgDef {
 message GetCustomerByIdResMsgDef{
     CustomerMsgDef customer = 1;
     Protos.Common.ResponseMsgDef res = 2;
+
 }
